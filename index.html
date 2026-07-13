@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>幸福小窝 - 我们的家庭</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #FFB347;
+      --secondary-color: #FFD1DC;
+      --warm-bg: #FFF8E7;
+      --soft-pink: #FFE4E1;
+      --mint-green: #98D8C8;
+      --soft-blue: #E0F7FA;
+    }
+    
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background: linear-gradient(135deg, #FFF8E7 0%, #FFE4E1 50%, #E0F7FA 100%);
+      min-height: 100vh;
+    }
+
+    .font-handwriting {
+      font-family: 'Ma Shan Zheng', cursive;
+    }
+
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(255, 179, 71, 0.3);
+    }
+
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bounce-animation {
+      animation: bounce 0.5s ease;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .music-pulse {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .wave-animation {
+      animation: wave 2s ease-in-out infinite;
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(20deg); }
+      75% { transform: rotate(-20deg); }
+    }
+
+    .heart-beat {
+      animation: heartBeat 1s ease-in-out infinite;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      14% { transform: scale(1.1); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.1); }
+      70% { transform: scale(1); }
+    }
+
+    .scroll-hint {
+      animation: scrollHint 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollHint {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(10px); opacity: 1; }
+    }
+
+    .star {
+      animation: twinkle 2s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .comment-enter {
+      animation: commentEnter 0.5s ease-out forwards;
+    }
+
+    @keyframes commentEnter {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .nav-link {
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #FFB347, #FFD1DC);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .falling-star {
+      position: fixed;
+      top: -20px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg) scale(0.3);
+        opacity: 0;
+      }
+    }
+
+    .family-video {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .video-frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .video-frame.active {
+      opacity: 1;
+    }
+
+    .member-appear {
+      position: absolute;
+      width: 32%;
+      height: 32%;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: memberPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    }
+
+    .member-appear.dad {
+      top: 15%;
+      left: 8%;
+      transform: scale(0);
+      animation-delay: 0.2s;
+      z-index: 4;
+    }
+
+    .member-appear.mom {
+      top: 15%;
+      right: 8%;
+      transform: scale(0);
+      animation-delay: 0.4s;
+      z-index: 3;
+    }
+
+    .member-appear.brother {
+      bottom: 15%;
+      left: 8%;
+      transform: scale(0);
+      animation-delay: 0.6s;
+      z-index: 2;
+    }
+
+    .member-appear.me {
+      bottom: 15%;
+      right: 8%;
+      transform: scale(0);
+      animation-delay: 0.8s;
+      z-index: 1;
+    }
+
+    @keyframes memberPop {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .caption {
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.9);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #FF6B6B;
+      animation: captionFade 0.5s ease forwards;
+      animation-delay: 1s;
+      opacity: 0;
+      white-space: nowrap;
+    }
+
+    @keyframes captionFade {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <nav class="bg-white/80 backdrop-blur-md shadow-sm py-3 px-4 md:px-8">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <a href="#" class="flex items-center gap-2 group">
+          <span class="text-2xl">🏠</span>
+          <span class="font-handwriting text-2xl text-orange-500 group-hover:scale-110 transition-transform">幸福小窝</span>
+        </a>
+        
+        <div class="hidden md:flex items-center gap-6">
+          <a href="#hero" class="nav-link text-gray-700 hover:text-orange-500 font-medium">首页</a>
+          <a href="#family" class="nav-link text-gray-700 hover:text-orange-500 font-medium">家庭成员</a>
+          <a href="#comments" class="nav-link text-gray-700 hover:text-orange-500 font-medium">留言板</a>
+        </div>
+
+        <button id="menu-btn" class="md:hidden text-gray-700 p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div id="mobile-menu" class="md:hidden hidden bg-white/95 backdrop-blur-md shadow-lg mt-2 py-4 px-4">
+        <div class="flex flex-col gap-4">
+          <a href="#hero" class="text-gray-700 hover:text-orange-500 font-medium py-2">首页</a>
+          <a href="#family" class="text-gray-700 hover:text-orange-500 font-medium py-2">家庭成员</a>
+          <a href="#comments" class="text-gray-700 hover:text-orange-500 font-medium py-2">留言板</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section id="hero" class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-16">
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-20 left-10 text-4xl star" style="animation-delay: 0s;">⭐</div>
+      <div class="absolute top-40 right-20 text-3xl star" style="animation-delay: 0.5s;">🌟</div>
+      <div class="absolute bottom-40 left-20 text-2xl star" style="animation-delay: 1s;">✨</div>
+      <div class="absolute top-60 left-1/4 text-2xl star" style="animation-delay: 1.5s;">💫</div>
+      <div class="absolute bottom-60 right-1/4 text-3xl star" style="animation-delay: 0.8s;">⭐</div>
+      <div class="absolute top-1/3 right-10 text-2xl star" style="animation-delay: 1.2s;">🌟</div>
+    </div>
+
+    <div class="text-center z-10 px-4 fade-in">
+      <div class="mb-6 flex justify-center">
+        <span class="inline-block text-6xl wave-animation">👋</span>
+      </div>
+      <h1 class="font-handwriting text-5xl md:text-7xl text-orange-500 mb-4 drop-shadow-lg">
+        欢迎来到我们家！
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 mb-8 font-medium">
+        这里有欢笑、有温暖、还有一堆奇奇怪怪的故事 🎉
+      </p>
+      
+      <div class="relative w-64 h-64 md:w-80 md:h-80 mx-auto mb-8">
+        <div class="absolute inset-0 bg-gradient-to-br from-orange-200 to-pink-200 rounded-full opacity-50 float-animation"></div>
+        <div class="absolute inset-4 bg-gradient-to-br from-yellow-100 to-pink-100 rounded-full border-4 border-white shadow-xl overflow-hidden">
+          <div class="w-full h-full relative">
+            <div class="family-video">
+              <div class="video-frame frame-1">
+                <div class="member-appear dad">
+                  <img src="father.png" alt="爸爸" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="caption">👨 爸爸登场！</div>
+              </div>
+              <div class="video-frame frame-2">
+                <div class="member-appear dad">
+                  <img src="father.png" alt="爸爸" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="member-appear mom">
+                  <img src="mother.png" alt="妈妈" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="caption">👩 妈妈加入！</div>
+              </div>
+              <div class="video-frame frame-3">
+                <div class="member-appear dad">
+                  <img src="father.png" alt="爸爸" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="member-appear mom">
+                  <img src="mother.png" alt="妈妈" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="member-appear brother">
+                  <img src="brother.png" alt="弟弟" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="caption">👦 弟弟来了！</div>
+              </div>
+              <div class="video-frame frame-4">
+                <div class="member-appear dad">
+                  <img src="father.png" alt="爸爸" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="member-appear mom">
+                  <img src="mother.png" alt="妈妈" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="member-appear brother">
+                  <img src="brother.png" alt="弟弟" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="member-appear me">
+                  <img src="me.png" alt="我" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="caption">👧 我们是幸福的一家人！❤️</div>
+              </div>
+              <div class="video-frame frame-5">
+                <img src="famili.png" alt="全家福" class="w-full h-full object-cover" />
+                <div class="caption">📸 全家福！</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-4">
+        <button id="music-btn" class="flex items-center gap-2 bg-gradient-to-r from-orange-400 to-pink-400 text-white px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all hover:scale-105">
+          <span id="music-icon" class="text-xl">🎵</span>
+          <span id="music-text">开启温馨音乐</span>
+        </button>
+        
+        <p class="text-gray-500 text-sm scroll-hint">↓ 往下滑动探索更多 ↓</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="family" class="py-20 px-4 md:px-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12 fade-in">
+        <h2 class="font-handwriting text-4xl md:text-5xl text-orange-500 mb-4">👨‍👩‍👧‍👦 家庭成员介绍</h2>
+        <p class="text-gray-600 text-lg">四位性格迥异但相亲相爱的小伙伴</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <div class="bg-white rounded-3xl p-6 shadow-lg card-hover fade-in" style="animation-delay: 0.2s;">
+          <div class="relative mb-4">
+            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-green-200 shadow-md">
+              <img src="me.png" alt="我" class="w-full h-full object-cover" />
+            </div>
+            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-green-400 text-white text-xs px-3 py-1 rounded-full">我</div>
+          </div>
+          <h3 class="font-handwriting text-2xl text-center text-gray-800 mb-2">小通</h3>
+          <p class="text-gray-600 text-sm text-center mb-4">
+            13岁篮球少年报道！球场是我的快乐星球，篮球是我的最佳搭子。主打一个"运球稳、投球准，搞笑也不含糊"，能在三分线外耍帅，也能在队友失误时用段子救场。毕竟，快乐打球才是第一要义。
+          </p>
+          <div class="flex justify-center gap-2 flex-wrap">
+            <span class="bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">篮球少年</span>
+            <span class="bg-purple-100 text-purple-600 text-xs px-3 py-1 rounded-full">搞笑担当</span>
+            <span class="bg-orange-100 text-orange-600 text-xs px-3 py-1 rounded-full">快乐星球</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-lg card-hover fade-in" style="animation-delay: 0.4s;">
+          <div class="relative mb-4">
+            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-blue-200 shadow-md">
+              <img src="brother.png" alt="弟弟" class="w-full h-full object-cover" />
+            </div>
+            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-400 text-white text-xs px-3 py-1 rounded-full">弟弟</div>
+          </div>
+          <h3 class="font-handwriting text-2xl text-center text-gray-800 mb-2">小知</h3>
+          <p class="text-gray-600 text-sm text-center mb-4">
+            5岁羽毛球"小魔王"报道！球拍是我的魔法棒，跑跳是我的专属技能。主打一个"发球靠甩、接球靠蒙，捣乱第一名"，打着打着就能和对手玩起捉迷藏，连羽毛球都得乖乖陪我调皮。
+          </p>
+          <div class="flex justify-center gap-2 flex-wrap">
+            <span class="bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">小魔王</span>
+            <span class="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full">调皮捣蛋</span>
+            <span class="bg-cyan-100 text-cyan-600 text-xs px-3 py-1 rounded-full">羽毛球</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-lg card-hover fade-in" style="animation-delay: 0.6s;">
+          <div class="relative mb-4">
+            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-orange-200 shadow-md">
+              <img src="father.png" alt="爸爸" class="w-full h-full object-cover object-center" />
+            </div>
+            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-orange-400 text-white text-xs px-3 py-1 rounded-full">爸爸</div>
+          </div>
+          <h3 class="font-handwriting text-2xl text-center text-gray-800 mb-2">大鹏</h3>
+          <p class="text-gray-600 text-sm text-center mb-4">
+            四十岁资深乒乓爱好者，平日闲来便挥拍对决，球技尚可笑点十足，打球主打快乐第一，输赢全凭随缘。
+          </p>
+          <div class="flex justify-center gap-2 flex-wrap">
+            <span class="bg-orange-100 text-orange-600 text-xs px-3 py-1 rounded-full">乒乓达人</span>
+            <span class="bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">快乐打球</span>
+            <span class="bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">随缘输赢</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-lg card-hover fade-in" style="animation-delay: 0.8s;">
+          <div class="relative mb-4">
+            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-pink-200 shadow-md">
+              <img src="mother.png" alt="妈妈" class="w-full h-full object-cover" />
+            </div>
+            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-pink-400 text-white text-xs px-3 py-1 rounded-full">妈妈</div>
+          </div>
+          <h3 class="font-handwriting text-2xl text-center text-gray-800 mb-2">大霞</h3>
+          <p class="text-gray-600 text-sm text-center mb-4">
+            今年37岁，平日里静心执笔热爱绘画，偏爱简约淡然的风格，在笔墨色彩里沉淀内心，享受安静美好的闲暇时光。
+          </p>
+          <div class="flex justify-center gap-2 flex-wrap">
+            <span class="bg-pink-100 text-pink-600 text-xs px-3 py-1 rounded-full">绘画爱好者</span>
+            <span class="bg-purple-100 text-purple-600 text-xs px-3 py-1 rounded-full">简约风格</span>
+            <span class="bg-yellow-100 text-yellow-600 text-xs px-3 py-1 rounded-full">娴静优雅</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="comments" class="py-20 px-4 md:px-8 bg-white/50">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12 fade-in">
+        <h2 class="font-handwriting text-4xl md:text-5xl text-orange-500 mb-4">💬 温馨留言板</h2>
+        <p class="text-gray-600 text-lg">留下你想说的话，让我们一起分享快乐！</p>
+      </div>
+
+      <div class="bg-white rounded-3xl p-6 md:p-8 shadow-lg fade-in">
+        <div class="mb-6">
+          <input type="text" id="nickname" placeholder="你的昵称" class="w-full px-4 py-3 rounded-xl border-2 border-orange-100 focus:border-orange-400 focus:outline-none transition-colors mb-4 text-gray-700" />
+          <textarea id="comment-content" placeholder="写下你想说的话..." class="w-full px-4 py-3 rounded-xl border-2 border-orange-100 focus:border-orange-400 focus:outline-none transition-colors mb-4 text-gray-700 h-32 resize-none"></textarea>
+          <button id="submit-btn" class="w-full bg-gradient-to-r from-orange-400 to-pink-400 text-white py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+            <span>发送留言</span>
+            <span>📤</span>
+          </button>
+        </div>
+
+        <div id="comments-list" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+          <div class="text-center text-gray-400 py-8">
+            <p class="text-4xl mb-2">💭</p>
+            <p>还没有留言，快来抢沙发吧！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-8 px-4 bg-white/80 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto text-center">
+      <p class="font-handwriting text-xl text-orange-500 mb-2">🏠 幸福小窝</p>
+      <p class="text-gray-500 text-sm">用爱搭建的温馨港湾 ❤️</p>
+      <p class="text-gray-400 text-xs mt-2">© 2024 我们的家庭</p>
+    </div>
+  </footer>
+
+  <audio id="bg-music" loop>
+    <source src="https://assets.mixkit.co/music/preview/mixkit-soft-christmas-background-sound-456.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    });
+
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('shadow-lg');
+        header.querySelector('nav').classList.add('bg-white/95');
+        header.querySelector('nav').classList.remove('bg-white/80');
+      } else {
+        header.classList.remove('shadow-lg');
+        header.querySelector('nav').classList.remove('bg-white/95');
+        header.querySelector('nav').classList.add('bg-white/80');
+      }
+    });
+
+    const musicBtn = document.getElementById('music-btn');
+    const musicIcon = document.getElementById('music-icon');
+    const musicText = document.getElementById('music-text');
+    const bgMusic = document.getElementById('bg-music');
+    let isPlaying = false;
+
+    musicBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        bgMusic.pause();
+        musicIcon.textContent = '🎵';
+        musicText.textContent = '开启温馨音乐';
+        musicBtn.classList.remove('music-pulse');
+      } else {
+        bgMusic.play().catch(e => {
+          console.log('Music play failed:', e);
+          alert('请点击浏览器允许播放音频');
+        });
+        musicIcon.textContent = '🎶';
+        musicText.textContent = '关闭音乐';
+        musicBtn.classList.add('music-pulse');
+      }
+      isPlaying = !isPlaying;
+    });
+
+    const submitBtn = document.getElementById('submit-btn');
+    const nicknameInput = document.getElementById('nickname');
+    const contentInput = document.getElementById('comment-content');
+    const commentsList = document.getElementById('comments-list');
+
+    function loadComments() {
+      const comments = JSON.parse(localStorage.getItem('family_comments') || '[]');
+      renderComments(comments);
+    }
+
+    function renderComments(comments) {
+      if (comments.length === 0) {
+        commentsList.innerHTML = `
+          <div class="text-center text-gray-400 py-8">
+            <p class="text-4xl mb-2">💭</p>
+            <p>还没有留言，快来抢沙发吧！</p>
+          </div>
+        `;
+        return;
+      }
+
+      commentsList.innerHTML = comments.map((comment, index) => `
+        <div class="bg-gradient-to-r from-orange-50 to-pink-50 rounded-xl p-4 comment-enter" style="animation-delay: ${index * 0.1}s;">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-300 to-pink-300 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+              ${comment.nickname.charAt(0)}
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-medium text-gray-800">${comment.nickname}</span>
+                <span class="text-xs text-gray-400">${comment.createdAt}</span>
+              </div>
+              <p class="text-gray-600 mb-2">${comment.content}</p>
+              <button class="like-btn flex items-center gap-1 text-gray-400 hover:text-red-500 transition-colors" data-id="${comment.id}">
+                <span class="heart-icon">❤️</span>
+                <span class="likes-count">${comment.likes}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.dataset.id;
+          likeComment(id);
+        });
+      });
+    }
+
+    function saveComments(comments) {
+      localStorage.setItem('family_comments', JSON.stringify(comments));
+    }
+
+    function addComment() {
+      const nickname = nicknameInput.value.trim();
+      const content = contentInput.value.trim();
+
+      if (!nickname || !content) {
+        alert('请填写昵称和留言内容哦！');
+        return;
+      }
+
+      const comments = JSON.parse(localStorage.getItem('family_comments') || '[]');
+      const newComment = {
+        id: Date.now().toString(),
+        nickname,
+        content,
+        likes: 0,
+        createdAt: new Date().toLocaleString('zh-CN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      };
+
+      comments.unshift(newComment);
+      saveComments(comments);
+      renderComments(comments);
+
+      nicknameInput.value = '';
+      contentInput.value = '';
+
+      submitBtn.classList.add('bounce-animation');
+      setTimeout(() => submitBtn.classList.remove('bounce-animation'), 500);
+    }
+
+    function likeComment(id) {
+      const comments = JSON.parse(localStorage.getItem('family_comments') || '[]');
+      const comment = comments.find(c => c.id === id);
+      if (comment) {
+        comment.likes++;
+        saveComments(comments);
+        renderComments(comments);
+      }
+    }
+
+    submitBtn.addEventListener('click', addComment);
+
+    contentInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        addComment();
+      }
+    });
+
+    loadComments();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const fadeElements = document.querySelectorAll('.fade-in');
+      fadeElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
+    });
+
+    function createFallingStar() {
+      const star = document.createElement('div');
+      star.className = 'falling-star';
+      const starEmojis = ['⭐', '🌟', '✨', '💫', '⭐', '🌟'];
+      star.textContent = starEmojis[Math.floor(Math.random() * starEmojis.length)];
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.fontSize = (12 + Math.random() * 16) + 'px';
+      star.style.animationDuration = (5 + Math.random() * 6) + 's';
+      star.style.animationDelay = Math.random() * 1 + 's';
+      document.body.appendChild(star);
+      setTimeout(() => {
+        star.remove();
+      }, 12000);
+    }
+
+    setInterval(createFallingStar, 2000);
+    createFallingStar();
+
+    function startFamilyVideo() {
+      const frames = document.querySelectorAll('.video-frame');
+      let currentFrame = 0;
+
+      function showFrame(index) {
+        frames.forEach((frame, i) => {
+          if (i === index) {
+            frame.classList.add('active');
+          } else {
+            frame.classList.remove('active');
+          }
+        });
+      }
+
+      showFrame(currentFrame);
+
+      const timer = setInterval(() => {
+        currentFrame++;
+        if (currentFrame >= frames.length) {
+          currentFrame = 0;
+        }
+        showFrame(currentFrame);
+      }, 3000);
+    }
+
+    setTimeout(startFamilyVideo, 1000);
+  </script>
+</body>
+</html>
